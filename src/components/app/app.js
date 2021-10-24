@@ -4,10 +4,6 @@ import Header from '../header';
 import RandomChar from '../randomChar';
 import ItemList from '../itemList';
 import CharDetails from '../charDetails';
-import GotService from '../services/gotService';
-
-const got = new GotService();
-got.getAllCharacters().then((houses) => console.log(houses));
 
 const App = () => {
   return (
