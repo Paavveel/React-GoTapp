@@ -3,8 +3,7 @@ import { Col, Row, Container } from 'reactstrap';
 import styled from 'styled-components';
 import Header from '../header';
 import RandomChar from '../randomChar';
-import ItemList from '../itemList';
-import CharDetails from '../charDetails';
+import ChatacterPage from '../characterPage';
 import ErrorMessage from '../errorMessage';
 
 const Button = styled.button`
@@ -34,6 +33,10 @@ export default class App extends React.Component {
     });
   };
 
+  componentDidCatch() {
+    this.setState({ error: true });
+  }
+
   render() {
     if (this.state.error) {
       return <ErrorMessage />;
@@ -53,14 +56,7 @@ export default class App extends React.Component {
               </Button>
             </Col>
           </Row>
-          <Row>
-            <Col md='6'>
-              <ItemList />
-            </Col>
-            <Col md='6'>
-              <CharDetails />
-            </Col>
-          </Row>
+          <ChatacterPage />
         </Container>
       </>
     );

@@ -21,7 +21,7 @@ export default class GotService {
     return this._transformBook(book);
   }
   async getAllCharacters() {
-    const res = await this.getResource('/characters?page=5');
+    const res = await this.getResource(`/characters?page=5&pageSize=10`);
     return res.map(this._transformCharacter);
   }
   async getCharacter(id) {
@@ -45,7 +45,7 @@ export default class GotService {
     }
   }
 
-  _transformCharacter(char) {
+  _transformCharacter = (char) => {
     return {
       name: this.isSet(char.name),
       gender: this.isSet(char.gender),
@@ -53,7 +53,8 @@ export default class GotService {
       died: this.isSet(char.died),
       culture: this.isSet(char.culture),
     };
-  }
+  };
+
   _transformHouse(house) {
     return {
       name: house.name,
