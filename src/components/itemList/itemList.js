@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import styled from 'styled-components';
 import GotService from '../../services/gotService';
 import Spinner from '../spinner';
+import ErrorMessage from '../errorMessage';
 
 const ListContainer = styled.ul`
   .list-group-item {
@@ -14,13 +15,25 @@ export default class ItemList extends Component {
 
   state = {
     charList: null,
+    error: false,
   };
 
   componentDidMount() {
-    this.gotService.getAllCharacters().then((charList) => {
-      this.setState({ charList });
-    });
+    this.gotService
+      .getAllCharacters()
+      .then((charList) => {
+        this.setState({ charList, error: false });
+      })
+      .catch(() => this.onError());
   }
+
+  componentDidCatch() {
+    this.setState({ charList: null, error: true });
+  }
+
+  onError = () => {
+    this.setState({ charList: null, error: true });
+  };
 
   renderItem = (arr) => {
     return arr.map((item, i) => {
@@ -37,10 +50,13 @@ export default class ItemList extends Component {
   };
 
   render() {
-    const { charList } = this.state;
+    const { charList, error } = this.state;
 
     if (!charList) {
       return <Spinner />;
+    }
+    if (error) {
+      return <ErrorMessage />;
     }
 
     const items = this.renderItem(charList);

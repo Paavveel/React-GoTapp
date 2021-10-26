@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
 import GotService from '../../services/gotService';
+import Spinner from '../spinner';
+import ErrorMessage from '../errorMessage';
 
 const CharBlock = styled.div`
   background-color: #fff;
@@ -16,7 +18,7 @@ const Term = styled.span`
   font-weight: bold;
 `;
 
-const ErrorSpan = styled.span`
+const SelectMessage = styled.span`
   color: #fff;
   text-align: center;
   font-size: 26px;
@@ -26,6 +28,8 @@ export default class CharDetails extends Component {
 
   state = {
     char: null,
+    loading: true,
+    error: false,
   };
 
   componentDidMount() {
@@ -35,8 +39,17 @@ export default class CharDetails extends Component {
   componentDidUpdate(prevProps) {
     if (this.props.charId !== prevProps.charId) {
       this.updateChar();
+      console.log(this.state.char);
     }
   }
+
+  onCharDetailsLoaded = (char) => {
+    this.setState({ char, loading: false });
+  };
+
+  onError = () => {
+    this.setState({ char: null, error: true });
+  };
 
   updateChar = () => {
     const { charId } = this.props;
@@ -44,16 +57,29 @@ export default class CharDetails extends Component {
       return;
     }
 
-    this.gotService.getCharacter(charId).then((char) => {
-      this.setState({ char });
-    });
+    this.setState({ loading: true });
+
+    this.gotService
+      .getCharacter(charId)
+      .then((char) => this.onCharDetailsLoaded(char))
+      .catch(() => this.onError());
   };
 
   render() {
-    if (!this.state.char) {
-      return <ErrorSpan>Please select a character</ErrorSpan>;
+    const { char, loading, error } = this.state;
+    if (!char && error) {
+      return <ErrorMessage />;
+    } else if (!char) {
+      return <SelectMessage>Please select a character</SelectMessage>;
     }
 
+    if (loading) {
+      return (
+        <CharBlock className='rounded'>
+          <Spinner />
+        </CharBlock>
+      );
+    }
     const { name, gender, born, died, culture } = this.state.char;
     return (
       <CharBlock className='rounded'>
