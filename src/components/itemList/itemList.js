@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
-import GotService from '../../services/gotService';
 import Spinner from '../spinner';
 import ErrorMessage from '../errorMessage';
 
@@ -11,55 +10,56 @@ const ListContainer = styled.ul`
 `;
 
 export default class ItemList extends Component {
-  gotService = new GotService();
-
   state = {
-    charList: null,
+    itemList: null,
     error: false,
   };
 
   componentDidMount() {
-    this.gotService
-      .getAllCharacters()
-      .then((charList) => {
-        this.setState({ charList, error: false });
+    const { getData } = this.props;
+
+    getData()
+      .then((itemList) => {
+        this.setState({ itemList, error: false });
       })
       .catch(() => this.onError());
   }
 
   componentDidCatch() {
-    this.setState({ charList: null, error: true });
+    this.setState({ itemList: null, error: true });
   }
 
   onError = () => {
-    this.setState({ charList: null, error: true });
+    this.setState({ itemList: null, error: true });
   };
 
   renderItem = (arr) => {
-    return arr.map((item, i) => {
+    return arr.map((item) => {
+      const { id } = item;
+      const label = this.props.renderItem(item);
       return (
         <li
-          key={i}
+          key={id}
           className='list-group-item'
-          onClick={() => this.props.onCharSelected(41 + i)}
+          onClick={() => this.props.onCharSelected(id)}
         >
-          {item.name}
+          {label}
         </li>
       );
     });
   };
 
   render() {
-    const { charList, error } = this.state;
+    const { itemList, error } = this.state;
 
-    if (!charList) {
+    if (!itemList) {
       return <Spinner />;
     }
     if (error) {
       return <ErrorMessage />;
     }
 
-    const items = this.renderItem(charList);
+    const items = this.renderItem(itemList);
 
     return <ListContainer className='list-group'>{items}</ListContainer>;
   }

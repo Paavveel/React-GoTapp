@@ -3,8 +3,11 @@ import { Col, Row, Container } from 'reactstrap';
 import styled from 'styled-components';
 import Header from '../header';
 import RandomChar from '../randomChar';
-import ChatacterPage from '../characterPage';
+import CharacterPage from '../characterPage';
 import ErrorMessage from '../errorMessage';
+import ItemList from '../itemList';
+import CharDetails from '../charDetails';
+import GotService from '../../services/gotService';
 
 const Button = styled.button`
   padding: 12px;
@@ -22,6 +25,8 @@ const Button = styled.button`
 `;
 
 export default class App extends React.Component {
+  gotService = new GotService();
+
   state = {
     showRandomChar: true,
     error: false,
@@ -56,7 +61,31 @@ export default class App extends React.Component {
               </Button>
             </Col>
           </Row>
-          <ChatacterPage />
+          <CharacterPage />
+          <Row>
+            <Col md='6'>
+              <ItemList
+                onCharSelected={this.onCharSelected}
+                getData={this.gotService.getAllBooks}
+                renderItem={(item) => item.name}
+              />
+            </Col>
+            <Col md='6'>
+              <CharDetails charId={this.state.selectedChar} />
+            </Col>
+          </Row>
+          <Row>
+            <Col md='6'>
+              <ItemList
+                onCharSelected={this.onCharSelected}
+                getData={this.gotService.getAllHouses}
+                renderItem={(item) => item.name}
+              />
+            </Col>
+            <Col md='6'>
+              <CharDetails charId={this.state.selectedChar} />
+            </Col>
+          </Row>
         </Container>
       </>
     );
