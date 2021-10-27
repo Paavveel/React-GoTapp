@@ -1,11 +1,11 @@
 import React from 'react';
-import ItemList from '../../itemList';
-import ItemDetails, { Field } from '../../itemDetails';
-import ErrorMessage from '../../errorMessage';
-import GotService from '../../../services/gotService';
-import RowBlock from '../../rowBlock';
+import ItemList from '../itemList';
+import ItemDetails, { Field } from '../itemDetails';
+import ErrorMessage from '../errorMessage';
+import GotService from '../../services/gotService';
+import RowBlock from '../rowBlock';
 
-export default class BookPage extends React.Component {
+export default class BooksPage extends React.Component {
   gotService = new GotService();
 
   state = {

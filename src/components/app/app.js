@@ -3,9 +3,7 @@ import { Col, Row, Container } from 'reactstrap';
 import styled from 'styled-components';
 import Header from '../header';
 import RandomChar from '../randomChar';
-import CharacterPage from '../Pages/characterPage';
-import HousePage from '../Pages/housePage';
-import BookPage from '../Pages/bookPage';
+import { CharacterPage, HousesPage, BooksPage } from '../pages';
 import ErrorMessage from '../errorMessage';
 import GotService from '../../services/gotService';
 
@@ -62,8 +60,8 @@ export default class App extends React.Component {
             </Col>
           </Row>
           <CharacterPage />
-          <HousePage />
-          <BookPage />
+          <HousesPage />
+          <BooksPage />
         </Container>
       </>
     );
