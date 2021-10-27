@@ -5,7 +5,7 @@ import ErrorMessage from '../errorMessage';
 import GotService from '../../services/gotService';
 import RowBlock from '../rowBlock';
 
-export default class CharacterPage extends React.Component {
+export default class HousePage extends React.Component {
   gotService = new GotService();
 
   state = {
