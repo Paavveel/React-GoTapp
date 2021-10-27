@@ -9,7 +9,7 @@ export default class HousesPage extends React.Component {
   gotService = new GotService();
 
   state = {
-    selectedHouse: 1,
+    selectedHouse: null,
     error: false,
   };
 

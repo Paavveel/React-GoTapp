@@ -9,7 +9,7 @@ export default class CharacterPage extends React.Component {
   gotService = new GotService();
 
   state = {
-    selectedChar: 130,
+    selectedChar: null,
     error: false,
   };
 

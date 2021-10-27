@@ -3,9 +3,12 @@ import { Col, Row, Container } from 'reactstrap';
 import styled from 'styled-components';
 import Header from '../header';
 import RandomChar from '../randomChar';
-import { CharacterPage, HousesPage, BooksPage } from '../pages';
+import { CharacterPage, HousesPage, BooksPage, BooksItem } from '../pages';
 import ErrorMessage from '../errorMessage';
 import GotService from '../../services/gotService';
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import './app.css';
+import NoMatchPage from '../noMatchPage';
 
 const Button = styled.button`
   padding: 12px;
@@ -46,24 +49,40 @@ export default class App extends React.Component {
     }
     const char = this.state.showRandomChar ? <RandomChar /> : null;
     return (
-      <>
-        <Container>
-          <Header />
-        </Container>
-        <Container>
-          <Row>
-            <Col lg={{ size: 5, offset: 0 }}>
-              {char}
-              <Button onClick={this.toggleRandomChar}>
-                Toggle random character
-              </Button>
-            </Col>
-          </Row>
-          <CharacterPage />
-          <HousesPage />
-          <BooksPage />
-        </Container>
-      </>
+      <div className='app'>
+        <Router>
+          <Container>
+            <Header />
+          </Container>
+          <Container>
+            <Switch>
+              <Route path='/' exact>
+                <Row>
+                  <Col lg={{ size: 5, offset: 0 }}>
+                    {char}
+                    <Button onClick={this.toggleRandomChar}>
+                      Toggle random character
+                    </Button>
+                  </Col>
+                </Row>
+              </Route>
+
+              <Route path='/characters/' exact component={CharacterPage} />
+              <Route path='/houses/' exact component={HousesPage} />
+              <Route path='/books/' exact component={BooksPage} />
+              <Route
+                path='/books/:id'
+                exact
+                render={({ match }) => {
+                  const { id } = match.params;
+                  return <BooksItem bookId={id} />;
+                }}
+              />
+              <Route component={NoMatchPage} />
+            </Switch>
+          </Container>
+        </Router>
+      </div>
     );
   }
 }
