@@ -3,10 +3,10 @@ import { Col, Row, Container } from 'reactstrap';
 import styled from 'styled-components';
 import Header from '../header';
 import RandomChar from '../randomChar';
-import CharacterPage from '../characterPage';
+import CharacterPage from '../Pages/characterPage';
+import HousePage from '../Pages/housePage';
+import BookPage from '../Pages/bookPage';
 import ErrorMessage from '../errorMessage';
-import ItemList from '../itemList';
-import CharDetails from '../charDetails';
 import GotService from '../../services/gotService';
 
 const Button = styled.button`
@@ -62,30 +62,8 @@ export default class App extends React.Component {
             </Col>
           </Row>
           <CharacterPage />
-          <Row>
-            <Col md='6'>
-              <ItemList
-                onItemSelected={this.onItemSelected}
-                getData={this.gotService.getAllBooks}
-                renderItem={(item) => item.name}
-              />
-            </Col>
-            <Col md='6'>
-              <CharDetails charId={this.state.selectedChar} />
-            </Col>
-          </Row>
-          <Row>
-            <Col md='6'>
-              <ItemList
-                onItemSelected={this.onItemSelected}
-                getData={this.gotService.getAllHouses}
-                renderItem={(item) => item.name}
-              />
-            </Col>
-            <Col md='6'>
-              <CharDetails charId={this.state.selectedChar} />
-            </Col>
-          </Row>
+          <HousePage />
+          <BookPage />
         </Container>
       </>
     );
