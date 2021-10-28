@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { Component } from 'react';
 import styled from 'styled-components';
 import GotService from '../../services/gotService';
 import Spinner from '../spinner';
@@ -18,47 +18,58 @@ const Term = styled.span`
   font-weight: bold;
 `;
 
-const RandomChar = () => {
-  const [char, setChar] = useState({});
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(false);
-
-  useEffect(() => {
-    const gotService = new GotService();
-    const updateChar = () => {
-      const id = Math.floor(Math.random() * 140 + 25);
-
-      gotService
-        .getCharacter(id)
-        .then((char) => {
-          setChar(char);
-          setLoading(false);
-        })
-        .catch(onError);
-    };
-    updateChar();
-    const timerId = setInterval(updateChar, 2000);
-
-    return () => clearInterval(timerId);
-  }, []);
-
-  const onError = () => {
-    setError(true);
-    setLoading(false);
+export default class RandomChar extends Component {
+  gotService = new GotService();
+  state = {
+    char: {},
+    loading: true,
+    error: false,
   };
 
-  const errorMessage = error ? <ErrorMessage /> : null;
-  const spinner = loading ? <Spinner /> : null;
-  const content = !(loading || error) ? <View char={char} /> : null;
+  componentDidMount() {
+    this.updateChar();
+    this.timerId = setInterval(this.updateChar, 2000);
+  }
 
-  return (
-    <Block className='rounded'>
-      {errorMessage}
-      {spinner}
-      {content}
-    </Block>
-  );
-};
+  componentWillUnmount() {
+    clearInterval(this.timerId);
+  }
+
+  onCharLoaded = (char) => {
+    this.setState({ char, loading: false });
+  };
+
+  onError = (err) => {
+    this.setState({
+      error: true,
+      loading: false,
+    });
+  };
+
+  updateChar = () => {
+    const id = Math.floor(Math.random() * 140 + 25);
+
+    this.gotService
+      .getCharacter(id)
+      .then(this.onCharLoaded)
+      .catch(this.onError);
+  };
+
+  render() {
+    const { char, loading, error } = this.state;
+    const errorMessage = error ? <ErrorMessage /> : null;
+    const spinner = loading ? <Spinner /> : null;
+    const content = !(loading || error) ? <View char={char} /> : null;
+
+    return (
+      <Block className='rounded'>
+        {errorMessage}
+        {spinner}
+        {content}
+      </Block>
+    );
+  }
+}
 
 const View = ({ char }) => {
   const { name, gender, born, died, culture } = char;
@@ -86,5 +97,3 @@ const View = ({ char }) => {
     </React.Fragment>
   );
 };
-
-export default RandomChar;
